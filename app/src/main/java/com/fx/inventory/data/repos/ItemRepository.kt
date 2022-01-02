@@ -30,8 +30,8 @@ class ItemRepository @Inject constructor(dataManager: DataManager,db: AppDb):Bas
         itemDao.updateItem(item)
     }
 
-    suspend fun setItemUpdated(itemId:Int){
-        return itemDao.setItemUpdated(true,itemId)
+    suspend fun setItemUpdated(itemId:Int,updated:Boolean){
+        return itemDao.setItemUpdated(updated,itemId)
     }
 
     suspend fun setItemDeleted(id:Int){
@@ -48,6 +48,22 @@ class ItemRepository @Inject constructor(dataManager: DataManager,db: AppDb):Bas
 
     suspend fun setCategoryDeleted(cid:Int){
         itemDao.setCategoryDeleted(true,cid)
+    }
+
+    suspend fun getItemsWhereCategoryDeleteStatusAndSyncStatus(catDeleted:Boolean,hasSynced:Boolean):List<Item>{
+        return itemDao.getItemsWhereCategoryDeleteStatusAndSyncStatus(catDeleted =catDeleted, hasSynced)
+    }
+
+    suspend fun updateItemsForCategorySyncStatus(hasCategorySynced:Boolean,cid:Int){
+        return itemDao.updateItemsForCategorySyncStatus(hasCategorySynced,cid)
+    }
+
+    suspend fun getItemsForSyncedCategory(hasCategorySynced:Boolean):List<Item>{
+        return itemDao.getItemsForSyncedCategory(hasCategorySynced)
+    }
+
+    suspend fun updateItemServerId(itemServerId:Int,id:Int){
+        return itemDao.setItemCategoryServerId(itemServerId,id)
     }
 
 }

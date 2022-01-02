@@ -36,5 +36,7 @@ data class Item(
     @ColumnInfo val catServerId: Int,
     @ColumnInfo val itemServedId: Int = Random(System.currentTimeMillis()).nextInt(),
     @ColumnInfo val deleted: Boolean = false,
-    @ColumnInfo val catDeleted: Boolean = false
+    @ColumnInfo val catDeleted: Boolean = false,
+    @ColumnInfo val hasSynced:Boolean = false,
+    @ColumnInfo val categoryHasSynced:Boolean =  false,
 )

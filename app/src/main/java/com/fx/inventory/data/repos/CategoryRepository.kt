@@ -12,43 +12,57 @@ class CategoryRepository @Inject constructor(db: AppDb, dm: DataManager) :
     private var categoryDao: CategoryDao =
         getDaoForClassType(CategoryDao::class.java) as CategoryDao
 
-    fun storeCategory(category: Category) {
+    suspend fun storeCategory(category: Category) {
         categoryDao.insertAll(category)
     }
 
-    fun getAllCategories(): List<Category> {
+    suspend fun getAllCategories(): List<Category> {
         return categoryDao.getAll()
     }
 
-    fun deleteCategory(category: Category) {
+    suspend fun deleteCategory(category: Category) {
         categoryDao.delete(category)
     }
 
-    fun updateCategory(category: Category) {
+    suspend fun updateCategory(category: Category) {
         categoryDao.updateCategory(category)
     }
 
-    fun getCategoryById(cid: Int): List<Category> {
+    suspend fun getCategoryById(cid: Int): List<Category> {
         return categoryDao.loadAllByIds(IntArray(1, init = { cid }))
     }
 
-    fun updateServerId(categoryServerId:Int,cid:Int){
+    suspend fun updateServerId(categoryServerId:Int,cid:Int){
         categoryDao.updateServerId(categoryServerId, cid)
     }
 
 
-    fun setDeleted(cid:Int){
+    suspend fun setDeleted(cid:Int){
         categoryDao.setDeleted(true,cid)
     }
 
-    fun setUpdated(cid:Int){
-        categoryDao.setCategoryUpdated(true,cid)
+    suspend fun setUpdated(cid:Int,updated:Boolean){
+        categoryDao.setCategoryUpdated(updated,cid)
     }
 
 
-    fun setSynced(cid:Int){
-        categoryDao.setSynced(true,cid)
+    suspend fun setSynced(cid:Int,synced:Boolean){
+        categoryDao.setSynced(synced,cid)
     }
+
+    suspend fun getSyncedUpdatedCategories(hasSynced:Boolean,updated: Boolean):List<Category>{
+        return categoryDao.getSyncedUpdatedCategories(hasSynced, updated)
+    }
+
+    suspend fun getSyncedDeletedCategories(hasSynced:Boolean,deleted: Boolean):List<Category>{
+        return categoryDao.getSyncedDeletedCategories(hasSynced, deleted)
+    }
+
+    suspend fun getCategoriesForSyncStatus(hasSynced: Boolean):List<Category>{
+        return categoryDao.getCategoriesForSyncStatus(hasSynced)
+    }
+
+
 
 
 }

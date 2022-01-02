@@ -27,6 +27,8 @@ class AppWorkerFactory @Inject constructor(
             SyncWorker::class.java.name -> {
                 SyncWorker(
                     categoryRepository = categoryRepository,
+                    itemRepository  = itemRepository,
+                    documentRepository = documentRepository,
                     dataManager = dataManager,
                     appContext = appContext,
                     workerParams = workerParameters,

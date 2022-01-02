@@ -25,12 +25,14 @@ class MainActivityViewModel @Inject constructor(
     private val itemRepository: ItemRepository,
     private val documentRepository: DocumentRepository) :
     ViewModel() {
+    //interfaces
     lateinit var categoryActionHandler: CategoryActionHandler
     lateinit var itemViewActionHandler: ItemActionHandler
-
+    //livedata
     var categoryListLiveData = MutableLiveData<List<Category>>(arrayListOf())
     var itemListLiveData = MutableLiveData<List<Item>>(arrayListOf())
     var documentListLiveData  =  MutableLiveData<MutableList<Document>>(arrayListOf())
+   //state
     var category: Category? = null
     var item:Item? = null
 
@@ -57,15 +59,14 @@ class MainActivityViewModel @Inject constructor(
     fun updateCategory(category: Category) {
         viewModelScope.launch(IO) {
             categoryRepository.updateCategory(category)
-            categoryRepository.setUpdated(category.cid)
+            categoryRepository.setUpdated(category.cid,true)
+
             getAllCategories()
         }
     }
 
 
-    fun getCategory(cid: Int): Category {
-        return categoryRepository.getCategoryById(cid).first()
-    }
+
 
 
     fun setCategoryDeleted(cid: Int) {
@@ -109,7 +110,7 @@ class MainActivityViewModel @Inject constructor(
     fun updateItem(item:Item){
         viewModelScope.launch(IO) {
             itemRepository.updateItem(item);
-            itemRepository.setItemUpdated(item.itemId)
+            itemRepository.setItemUpdated(item.itemId,true)
         }
     }
 
@@ -117,7 +118,7 @@ class MainActivityViewModel @Inject constructor(
     fun updateCountForItem(item: Item){
         viewModelScope.launch(IO) {
             itemRepository.updateItemCount(item.count,item.itemId)
-            itemRepository.setItemUpdated(item.itemId)
+            itemRepository.setItemUpdated(item.itemId,true)
         }
     }
 

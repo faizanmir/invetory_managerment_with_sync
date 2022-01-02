@@ -39,4 +39,16 @@ interface ItemDao :BaseDao{
     @Query("UPDATE item SET catDeleted =(:catDeleted) WHERE localCategoryId=(:cid)")
     suspend fun setCategoryDeleted(catDeleted:Boolean,cid:Int)
 
+    @Query("select * from item where catDeleted =(:catDeleted) and hasSynced =(:hasSynced)")
+    suspend fun getItemsWhereCategoryDeleteStatusAndSyncStatus(catDeleted: Boolean,hasSynced:Boolean):List<Item>
+
+    @Query("update item set categoryHasSynced =(:hasCategorySynced) where localCategoryId =(:cid)")
+    suspend fun updateItemsForCategorySyncStatus(hasCategorySynced:Boolean,cid:Int)
+
+    @Query("select * from item where categoryHasSynced =(:hasCategorySynced)")
+    suspend fun getItemsForSyncedCategory(hasCategorySynced:Boolean):List<Item>
+
+    @Query("update item set itemServedId =(:itemServerId) where itemId =(:id)")
+    suspend fun updateItemServerId(itemServerId:Int,id:Int)
+
 }
