@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), FragmentListener {
 
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresCharging(true)
+            .setRequiresCharging(false)
             .build()
 
         val testPeriodicWork = PeriodicWorkRequestBuilder<SyncWorker>(15, TimeUnit.MINUTES)

@@ -8,6 +8,7 @@ import com.fx.inventory.data.datamanager.DataManager
 import com.fx.inventory.data.repos.CategoryRepository
 import com.fx.inventory.data.repos.DocumentRepository
 import com.fx.inventory.data.repos.ItemRepository
+import com.fx.inventory.ui.login.repo.LoginRepository
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -16,6 +17,7 @@ class AppWorkerFactory @Inject constructor(
     val categoryRepository: CategoryRepository,
     val documentRepository: DocumentRepository,
     val dataManager: DataManager,
+    val loginRepository: LoginRepository,
     val retrofit: Retrofit,
 ) : WorkerFactory() {
     override fun createWorker(
@@ -32,7 +34,8 @@ class AppWorkerFactory @Inject constructor(
                     dataManager = dataManager,
                     appContext = appContext,
                     workerParams = workerParameters,
-                    retrofit = retrofit
+                    retrofit = retrofit,
+                    loginRepository = loginRepository
                 )
             }
             else -> {

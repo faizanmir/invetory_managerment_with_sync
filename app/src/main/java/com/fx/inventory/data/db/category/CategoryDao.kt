@@ -45,7 +45,7 @@ interface CategoryDao : BaseDao {
     @Query("SELECT * FROM CATEGORY WHERE hasSynced=(:hasSynced) AND updated=(:updated)")
     suspend fun getSyncedUpdatedCategories(hasSynced:Boolean,updated:Boolean):List<Category>
 
-    @Query("SELECT * FROM CATEGORY WHERE hasSynced(:hasSynced) AND deleted=(:deleted)")
+    @Query("SELECT * FROM CATEGORY WHERE hasSynced=(:hasSynced) AND deleted=(:deleted)")
     suspend fun getCategoriesForSyncStatus(hasSynced: Boolean,deleted:Boolean= false):List<Category>
 
 }

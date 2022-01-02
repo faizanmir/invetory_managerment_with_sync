@@ -51,4 +51,9 @@ interface ItemDao :BaseDao{
     @Query("update item set itemServedId =(:itemServerId) where itemId =(:id)")
     suspend fun updateItemServerId(itemServerId:Int,id:Int)
 
+    @Query("update item set hasSynced=(:synced) where itemId =(:itemId)")
+    suspend fun setItemSynced(synced:Boolean,itemId: Int)
+
+
+
 }

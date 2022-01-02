@@ -8,5 +8,7 @@ interface LoginRepository {
     suspend fun performLogin(email:String,password:String): LoginModel;
     suspend fun getAuthToken():Flow<String?>
     fun setAuthToken(authToken:String)
+    fun storeEmail(email:String)
+    fun storePassword(password:String)
     fun testInjection();
 }

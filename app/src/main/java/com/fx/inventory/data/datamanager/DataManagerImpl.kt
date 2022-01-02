@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -40,9 +41,42 @@ class DataManagerImpl constructor(var context: Context):DataManager{
         Log.e(TAG, "setAuthToken: Setting auth ...", )
     }
 
+    override fun storeEmail(email: String) {
+        CoroutineScope(IO).launch {
+            context.dataStore.edit { prefs->
+                val  key = stringPreferencesKey(EMAIL)
+                prefs[key] = email;
+            }
+        }
+    }
+
+    override fun storePassword(password: String) {
+        CoroutineScope(IO).launch {
+            context.dataStore.edit { prefs->
+                val  key = stringPreferencesKey(PASSWORD)
+                prefs[key] = password;
+            }
+        }
+    }
+
+    override fun retrieveEmail(): Flow<String?> {
+           return context.dataStore.data.map {
+                it[stringPreferencesKey(EMAIL)]
+            }
+
+    }
+
+    override fun retrievePassword(): Flow<String?> {
+        return context.dataStore.data.map {
+            it[stringPreferencesKey(PASSWORD)]
+        }
+    }
+
     companion object {
         private const val TAG = "DataManagerImpl"
         const val TOKEN = "token"
+        const val EMAIL  = "email"
+        const val PASSWORD = "password"
     }
 
 }

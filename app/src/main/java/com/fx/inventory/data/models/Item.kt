@@ -38,5 +38,5 @@ data class Item(
     @ColumnInfo val deleted: Boolean = false,
     @ColumnInfo val catDeleted: Boolean = false,
     @ColumnInfo val hasSynced:Boolean = false,
-    @ColumnInfo val categoryHasSynced:Boolean =  false,
+    @ColumnInfo val categoryHasSynced:Boolean,
 )

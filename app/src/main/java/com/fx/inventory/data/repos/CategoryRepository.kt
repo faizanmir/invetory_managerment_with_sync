@@ -25,6 +25,7 @@ class CategoryRepository @Inject constructor(db: AppDb, dm: DataManager) :
     }
 
     suspend fun updateCategory(category: Category) {
+
         categoryDao.updateCategory(category)
     }
 

@@ -87,7 +87,8 @@ class MainActivityViewModel @Inject constructor(
                     rate = rate,
                     count = count,
                     catServerId = category?.serverId!!,
-                    localCategoryId = category?.cid!!
+                    localCategoryId = category?.cid!!,
+                    categoryHasSynced = category?.hasSynced!!
                 )
             )
             getAllItemsForCategory()

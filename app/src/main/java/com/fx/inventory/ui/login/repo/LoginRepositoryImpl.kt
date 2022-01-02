@@ -22,6 +22,14 @@ class LoginRepositoryImpl @Inject constructor(
         return loginWebService.performLogin(email, password)
     }
 
+    override fun storeEmail(email: String) {
+        dataManager.storeEmail(email)
+    }
+
+    override fun storePassword(password: String) {
+        dataManager.storePassword(password)
+    }
+
     override fun testInjection() {
         Log.e(TAG, "testInjection: injection successful")
     }

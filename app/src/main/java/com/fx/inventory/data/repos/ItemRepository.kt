@@ -62,8 +62,17 @@ class ItemRepository @Inject constructor(dataManager: DataManager,db: AppDb):Bas
         return itemDao.getItemsForSyncedCategory(hasCategorySynced)
     }
 
-    suspend fun updateItemServerId(itemServerId:Int,id:Int){
-        return itemDao.setItemCategoryServerId(itemServerId,id)
+    suspend fun updateItemCategoryServerId(categoryServerId:Int, id:Int){
+        return itemDao.setItemCategoryServerId(categoryServerId,id)
     }
+
+    suspend fun updateItemServerId(itemServerId:Int, id:Int){
+        return itemDao.updateItemServerId(itemServerId,id)
+    }
+
+    suspend fun setItemSynced(synced:Boolean,itemId: Int){
+        return itemDao.setItemSynced(synced, itemId)
+    }
+
 
 }
