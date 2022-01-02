@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="cvdh"
+            type="com.fx.inventory.ui.main.fragments.category.CategoryViewDataHolder" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:onClick="@{()->cvdh.onClick()}"
+    android:layout_height="60dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginHorizontal="5dp"
+    android:onLongClick="@{()->cvdh.onLongClick()}"
+    >
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="category name 12345678899098"
+        android:textColor="@color/black"
+        android:text="@{cvdh.category.categoryName}"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
