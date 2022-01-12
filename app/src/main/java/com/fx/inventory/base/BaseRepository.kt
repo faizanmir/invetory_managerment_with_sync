@@ -8,7 +8,7 @@ import com.fx.inventory.data.db.item.ItemDao
 import com.fx.inventory.data.db.item.document.DocumentDao
 import kotlinx.coroutines.flow.Flow
 
-abstract class BaseRepository(var dataManager: DataManager,val db: AppDb) {
+abstract class BaseRepository(var dataManager: DataManager, val db: AppDb) {
 
     open suspend fun getAuthToken(): Flow<String?> {
         return dataManager.getAuthToken()
@@ -19,16 +19,15 @@ abstract class BaseRepository(var dataManager: DataManager,val db: AppDb) {
     }
 
 
-
-    open fun getDaoForClassType(clazz:Class<*>):BaseDao?{
+    open fun getDaoForClassType(clazz: Class<*>): BaseDao? {
         return when {
             clazz.isAssignableFrom(CategoryDao::class.java) -> {
-                db.categoryDao();
+                db.categoryDao()
             }
             clazz.isAssignableFrom(ItemDao::class.java) -> {
-                db.itemDao();
+                db.itemDao()
             }
-            clazz.isAssignableFrom(DocumentDao::class.java)->{
+            clazz.isAssignableFrom(DocumentDao::class.java) -> {
                 db.documentDao()
             }
             else -> {

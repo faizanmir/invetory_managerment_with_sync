@@ -29,9 +29,6 @@ class CategoryRepository @Inject constructor(db: AppDb, dm: DataManager) :
         categoryDao.updateCategory(category)
     }
 
-    suspend fun getCategoryById(cid: Int): List<Category> {
-        return categoryDao.loadAllByIds(IntArray(1, init = { cid }))
-    }
 
     suspend fun updateServerId(categoryServerId:Int,cid:Int){
         categoryDao.updateServerId(categoryServerId, cid)

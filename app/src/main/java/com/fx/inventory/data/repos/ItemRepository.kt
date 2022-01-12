@@ -74,5 +74,11 @@ class ItemRepository @Inject constructor(dataManager: DataManager,db: AppDb):Bas
         return itemDao.setItemSynced(synced, itemId)
     }
 
+    suspend fun getItem(id:Int): Item {
+        return itemDao.getItem(id);
+    }
+
+
+
 
 }

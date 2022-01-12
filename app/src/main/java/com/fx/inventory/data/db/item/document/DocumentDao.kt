@@ -17,4 +17,18 @@ interface  DocumentDao :BaseDao{
     @Query("SELECT * FROM document WHERE localItemId=(:itemId)")
     suspend fun getDocumentsForItem(itemId:Int):List<Document>
 
+    @Query("UPDATE document SET deleted=(:deleted) where id=(:id)")
+    suspend fun markFileForDeletion(deleted:Boolean,id:Int)
+
+    @Query("UPDATE document SET serverUrl=(:url) where id =(:id)")
+    suspend fun updateDocument(url:String,id: Int)
+
+    @Query("SELECT * from document")
+    suspend fun getAllDocuments():List<Document>
+
+    @Query("UPDATE document set itemServedId =(:itemServerId) where id =(:id)")
+    suspend fun updateItemServerId(itemServerId:Int,id:Int)
+
+    @Query("UPDATE document set serverUrl =(:url) , serverId = (:serverId) , hasSynced =(:synced)  where id=(:id)")
+    suspend fun updateParams(id: Int,serverId:Int,url: String,synced:Boolean)
 }

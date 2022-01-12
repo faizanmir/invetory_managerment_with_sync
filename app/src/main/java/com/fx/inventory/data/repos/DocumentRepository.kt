@@ -21,4 +21,24 @@ class DocumentRepository(dm: DataManager, db:AppDb) :BaseRepository(dm,db) {
     suspend fun getAllDocumentsForItem(itemId:Int): List<Document> {
         return documentDao.getDocumentsForItem(itemId)
     }
+
+
+    suspend fun getAllDocuments():List<Document>{
+        return documentDao.getAllDocuments();
+    }
+
+
+    suspend fun markItemForDeletion(id:Int,deleted:Boolean){
+        return documentDao.markFileForDeletion(deleted, id)
+    }
+
+    suspend fun updateItemServerId(id: Int,itemServerId:Int){
+        return documentDao.updateItemServerId(itemServerId = itemServerId, id = id)
+    }
+
+    suspend fun updateParams(id: Int,serverId:Int,url: String,synced:Boolean){
+        return documentDao.updateParams(id, serverId, url,synced)
+    }
+
+
 }

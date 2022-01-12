@@ -9,7 +9,7 @@ import com.fx.inventory.data.models.Category
 import com.fx.inventory.data.models.Document
 import com.fx.inventory.data.models.Item
 
-@Database(entities = [Category::class, Item::class,Document::class], version = 17, exportSchema = false)
+@Database(entities = [Category::class, Item::class,Document::class], version = 22, exportSchema = false)
 abstract class AppDb : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun itemDao():ItemDao

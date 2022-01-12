@@ -155,7 +155,7 @@ class MainActivityViewModel @Inject constructor(
 
     fun deleteDocument(document:Document){
         viewModelScope.launch(IO) {
-            documentRepository.deleteDocument(document)
+            documentRepository.markItemForDeletion(document.id,true);
             getAllDocumentsForItem()
         }
 

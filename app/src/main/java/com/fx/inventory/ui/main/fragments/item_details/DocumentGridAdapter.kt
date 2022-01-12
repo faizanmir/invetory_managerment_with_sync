@@ -8,11 +8,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.fx.inventory.base.BaseViewHolder
 import com.fx.inventory.data.models.Document
+import com.fx.inventory.databinding.EmptyListItemBinding
 import com.fx.inventory.databinding.GridItemItemImageBinding
 
 class DocumentGridAdapter(private val onDocumentDeleteClick:(Document)->Unit) : RecyclerView.Adapter<BaseViewHolder>() {
 
+    companion object{
+        const val DELETED =0;
+        const val NORMAL  =1;
+    }
+
+    inner class EmptyViewHolder(binding: EmptyListItemBinding) : BaseViewHolder(binding) {
+        override fun onBind() {
+
+        }
+    }
+
+
+
     var documentList = mutableListOf<Document>()
+
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(documentList: List<Document>) {
@@ -23,16 +38,28 @@ class DocumentGridAdapter(private val onDocumentDeleteClick:(Document)->Unit) : 
     }
 
 
+    override fun getItemViewType(position: Int): Int {
+        if (documentList[position].deleted){
+            return DELETED
+        }
+        return NORMAL
+    }
+
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        return DocumentViewHolder(
-            GridItemItemImageBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+        return if(viewType== NORMAL) {
+            DocumentViewHolder(
+                GridItemItemImageBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
-        )
+        }else{
+            EmptyViewHolder(EmptyListItemBinding.inflate(LayoutInflater.from(parent.context)))
+        }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
@@ -47,19 +74,21 @@ class DocumentGridAdapter(private val onDocumentDeleteClick:(Document)->Unit) : 
         BaseViewHolder(gridItemItemImageBinding) {
 
         override fun onBind() {
-            gridItemItemImageBinding.dgivdh =  DocumentGridItemViewDataHolder {
-                onDocumentDeleteClick(documentList[adapterPosition])
-            }
+            if (documentList[adapterPosition].deleted.not()) {
+                gridItemItemImageBinding.dgivdh = DocumentGridItemViewDataHolder {
+                    onDocumentDeleteClick(documentList[adapterPosition])
+                }
 
-           if(documentList[adapterPosition].serverUrl.isNotEmpty()) {
-               Glide.with(gridItemItemImageBinding.root.context)
-                   .load(documentList[adapterPosition].serverUrl)
-                   .into(gridItemItemImageBinding.documentImageView)
-           }else {
-               Glide.with(gridItemItemImageBinding.root.context)
-                   .load(Uri.parse(documentList[adapterPosition].filePath))
-                   .into(gridItemItemImageBinding.documentImageView)
-           }
+                if (documentList[adapterPosition].serverUrl.isNotEmpty()) {
+                    Glide.with(gridItemItemImageBinding.root.context)
+                        .load(documentList[adapterPosition].serverUrl)
+                        .into(gridItemItemImageBinding.documentImageView)
+                } else {
+                    Glide.with(gridItemItemImageBinding.root.context)
+                        .load(Uri.parse(documentList[adapterPosition].filePath))
+                        .into(gridItemItemImageBinding.documentImageView)
+                }
+            }
         }
 
     }
