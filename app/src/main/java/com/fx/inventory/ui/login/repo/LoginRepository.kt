@@ -11,4 +11,5 @@ interface LoginRepository {
     fun storeEmail(email:String)
     fun storePassword(password:String)
     fun testInjection();
+    suspend fun performItemFetch()
 }

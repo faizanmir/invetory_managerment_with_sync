@@ -3,8 +3,6 @@ package com.fx.inventory.sync
 import com.fx.inventory.data.models.DocumentResponse
 import com.fx.inventory.data.models.Response
 import com.google.gson.JsonObject
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface SyncApi {

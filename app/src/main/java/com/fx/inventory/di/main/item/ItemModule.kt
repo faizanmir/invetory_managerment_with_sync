@@ -7,13 +7,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
 class ItemModule {
 
     @Provides
-    fun provideItemRepository(db: AppDb,dataManager: DataManager):ItemRepository{
-        return ItemRepository(dataManager, db);
+    fun provideItemRepository(db: AppDb,dataManager: DataManager,retrofit: Retrofit):ItemRepository{
+        return ItemRepository(dataManager, db,retrofit);
     }
 }

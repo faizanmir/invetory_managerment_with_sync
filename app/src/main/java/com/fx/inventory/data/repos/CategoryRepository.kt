@@ -5,12 +5,19 @@ import com.fx.inventory.data.datamanager.DataManager
 import com.fx.inventory.data.db.AppDb
 import com.fx.inventory.data.db.category.CategoryDao
 import com.fx.inventory.data.models.Category
+import com.fx.inventory.data.models.CategoryResponse
+import com.fx.inventory.data.models.ItemWrapper
+import com.fx.inventory.data.remote.FetchUserDataApi
+import retrofit2.Retrofit
 import javax.inject.Inject
 
-class CategoryRepository @Inject constructor(db: AppDb, dm: DataManager) :
-    BaseRepository(dataManager = dm, db = db) {
+class CategoryRepository @Inject constructor(db: AppDb, dm: DataManager,var rf: Retrofit) :
+    BaseRepository(dataManager = dm, db = db,rf) {
     private var categoryDao: CategoryDao =
         getDaoForClassType(CategoryDao::class.java) as CategoryDao
+
+
+
 
     suspend fun storeCategory(category: Category) {
         categoryDao.insertAll(category)
@@ -60,6 +67,10 @@ class CategoryRepository @Inject constructor(db: AppDb, dm: DataManager) :
         return categoryDao.getCategoriesForSyncStatus(hasSynced)
     }
 
+
+    suspend fun fetchCategoriesOnline(): CategoryResponse {
+        return fetchUserDataApi.getCategoriesForUser(header = formHeaderMap()).execute().body()!!
+    }
 
 
 

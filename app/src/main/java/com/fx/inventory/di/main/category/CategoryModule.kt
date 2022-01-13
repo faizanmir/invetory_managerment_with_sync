@@ -7,12 +7,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
 class CategoryModule {
     @Provides
-    fun provideCategoryRepository(db:AppDb,dm:DataManager): CategoryRepository {
-        return CategoryRepository(db, dm)
+    fun provideCategoryRepository(db:AppDb,dm:DataManager,retrofit: Retrofit): CategoryRepository {
+        return CategoryRepository(db, dm,retrofit)
     }
 }

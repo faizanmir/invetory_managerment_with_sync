@@ -7,12 +7,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
 class DocumentModule {
     @Provides
-    fun provideDocumentRepository(db: AppDb,dataManager: DataManager): DocumentRepository {
-        return DocumentRepository(dataManager,db)
+    fun provideDocumentRepository(db: AppDb,dataManager: DataManager,retrofit: Retrofit): DocumentRepository {
+        return DocumentRepository(dataManager,db,retrofit)
     }
 }

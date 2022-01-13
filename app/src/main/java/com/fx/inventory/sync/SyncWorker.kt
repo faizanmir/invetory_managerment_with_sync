@@ -55,7 +55,6 @@ class SyncWorker @AssistedInject constructor(
             performLogin()
             performSync()
         }
-
         return Result.success()
 
     }
@@ -105,8 +104,6 @@ class SyncWorker @AssistedInject constructor(
         uploadItem()
         updateItem()
         deleteItemsMarkedForDeletion()
-//        deleteItemsFromServer()
-//        deleteItemsLocally()
     }
 
     private suspend fun deleteItemsMarkedForDeletion() {
@@ -195,16 +192,33 @@ class SyncWorker @AssistedInject constructor(
     }
 
     private suspend fun deleteCategory(category: Category) {
-        val response = syncApi.deleteCategory(headers = formHeaderMap(), category.serverId)
-        if (response.success) {
-            categoryRepository.deleteCategory(category)
+        try {
+            val response = syncApi.deleteCategory(headers = formHeaderMap(), category.serverId)
+            if (response.success) {
+               deleteCategoryLocally(category)
+            }
+        }catch (e:Exception){
+           deleteCategoryLocally(category)
         }
     }
 
+    private suspend fun deleteCategoryLocally(category: Category){
+        itemRepository.getAllItemsForCategory(category.cid).forEach {
+            documentRepository.deleteDocsForItem(it.itemId);
+        }
+        itemRepository.deleteItemsWithCatId(category.cid)
+        categoryRepository.deleteCategory(category)
+    }
+
+
     private suspend fun deleteUnSyncedCategoryMarkedForDeletion() {
         categoryRepository.getSyncedDeletedCategories(hasSynced = false, deleted = true)
-            .forEach {
-                categoryRepository.deleteCategory(it)
+            .forEach { category ->
+                itemRepository.getAllItemsForCategory(category.cid).forEach {
+                    documentRepository.deleteDocsForItem(it.itemId);
+                }
+                itemRepository.deleteItemsWithCatId(category.cid)
+                categoryRepository.deleteCategory(category)
             }
     }
 

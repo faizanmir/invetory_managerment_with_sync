@@ -31,4 +31,7 @@ interface  DocumentDao :BaseDao{
 
     @Query("UPDATE document set serverUrl =(:url) , serverId = (:serverId) , hasSynced =(:synced)  where id=(:id)")
     suspend fun updateParams(id: Int,serverId:Int,url: String,synced:Boolean)
+
+    @Query("DELETE from document where localItemId =(:localItemId)")
+    suspend fun deleteDocumentsForItemId(localItemId:Int)
 }

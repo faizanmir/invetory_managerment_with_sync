@@ -1,5 +1,6 @@
 package com.fx.inventory.data.login.web
 
+import com.fx.inventory.data.models.Category
 import com.fx.inventory.data.models.LoginModel
 import com.google.gson.JsonObject
 import retrofit2.http.Body
@@ -10,5 +11,9 @@ interface LoginApi {
     @Headers("Accept: application/json")
     @POST("/auth/login/")
     suspend fun performLogin(@Body body:JsonObject):LoginModel
+
+
+
+
 
 }

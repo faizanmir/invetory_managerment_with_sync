@@ -5,8 +5,9 @@ import com.fx.inventory.data.datamanager.DataManager
 import com.fx.inventory.data.db.AppDb
 import com.fx.inventory.data.db.item.document.DocumentDao
 import com.fx.inventory.data.models.Document
+import retrofit2.Retrofit
 
-class DocumentRepository(dm: DataManager, db:AppDb) :BaseRepository(dm,db) {
+class DocumentRepository(dm: DataManager, db:AppDb,rf: Retrofit) :BaseRepository(dm,db,rf) {
     private var documentDao:DocumentDao  =  getDaoForClassType(DocumentDao::class.java) as DocumentDao
 
     suspend fun addDocument(document:Document){
@@ -38,6 +39,11 @@ class DocumentRepository(dm: DataManager, db:AppDb) :BaseRepository(dm,db) {
 
     suspend fun updateParams(id: Int,serverId:Int,url: String,synced:Boolean){
         return documentDao.updateParams(id, serverId, url,synced)
+    }
+
+
+    suspend fun deleteDocsForItem(itemId:Int){
+        return documentDao.deleteDocumentsForItemId(itemId)
     }
 
 

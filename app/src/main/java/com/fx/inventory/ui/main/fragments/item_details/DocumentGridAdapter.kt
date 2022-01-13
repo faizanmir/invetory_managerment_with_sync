@@ -11,11 +11,12 @@ import com.fx.inventory.data.models.Document
 import com.fx.inventory.databinding.EmptyListItemBinding
 import com.fx.inventory.databinding.GridItemItemImageBinding
 
-class DocumentGridAdapter(private val onDocumentDeleteClick:(Document)->Unit) : RecyclerView.Adapter<BaseViewHolder>() {
+class DocumentGridAdapter(private val onDocumentDeleteClick: (Document) -> Unit) :
+    RecyclerView.Adapter<BaseViewHolder>() {
 
-    companion object{
-        const val DELETED =0;
-        const val NORMAL  =1;
+    companion object {
+        const val DELETED = 0;
+        const val NORMAL = 1;
     }
 
     inner class EmptyViewHolder(binding: EmptyListItemBinding) : BaseViewHolder(binding) {
@@ -23,7 +24,6 @@ class DocumentGridAdapter(private val onDocumentDeleteClick:(Document)->Unit) : 
 
         }
     }
-
 
 
     var documentList = mutableListOf<Document>()
@@ -39,17 +39,15 @@ class DocumentGridAdapter(private val onDocumentDeleteClick:(Document)->Unit) : 
 
 
     override fun getItemViewType(position: Int): Int {
-        if (documentList[position].deleted){
+        if (documentList[position].deleted) {
             return DELETED
         }
         return NORMAL
     }
 
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        return if(viewType== NORMAL) {
+        return if (viewType == NORMAL) {
             DocumentViewHolder(
                 GridItemItemImageBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -57,7 +55,7 @@ class DocumentGridAdapter(private val onDocumentDeleteClick:(Document)->Unit) : 
                     false
                 )
             )
-        }else{
+        } else {
             EmptyViewHolder(EmptyListItemBinding.inflate(LayoutInflater.from(parent.context)))
         }
     }

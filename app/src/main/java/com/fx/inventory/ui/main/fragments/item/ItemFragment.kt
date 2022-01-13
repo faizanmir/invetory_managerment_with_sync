@@ -13,8 +13,8 @@ import com.fx.inventory.databinding.DialogItemInputBinding
 import com.fx.inventory.databinding.FragmentItemBinding
 import com.fx.inventory.ui.main.MainActivity
 import com.fx.inventory.ui.main.fragments.item_details.ItemDetailsFragment
-import com.fx.inventory.ui.main.viewModel.interfaces.ItemActionHandler
 import com.fx.inventory.ui.main.viewModel.MainActivityViewModel
+import com.fx.inventory.ui.main.viewModel.interfaces.ItemActionHandler
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

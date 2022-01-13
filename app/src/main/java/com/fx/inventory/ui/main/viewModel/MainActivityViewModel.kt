@@ -1,6 +1,7 @@
 package com.fx.inventory.ui.main.viewModel
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,18 +24,21 @@ import javax.inject.Inject
 class MainActivityViewModel @Inject constructor(
     private val categoryRepository: CategoryRepository,
     private val itemRepository: ItemRepository,
-    private val documentRepository: DocumentRepository) :
+    private val documentRepository: DocumentRepository
+) :
     ViewModel() {
     //interfaces
     lateinit var categoryActionHandler: CategoryActionHandler
     lateinit var itemViewActionHandler: ItemActionHandler
+
     //livedata
     var categoryListLiveData = MutableLiveData<List<Category>>(arrayListOf())
     var itemListLiveData = MutableLiveData<List<Item>>(arrayListOf())
-    var documentListLiveData  =  MutableLiveData<MutableList<Document>>(arrayListOf())
-   //state
+    var documentListLiveData = MutableLiveData<MutableList<Document>>(arrayListOf())
+
+    //state
     var category: Category? = null
-    var item:Item? = null
+    var item: Item? = null
 
     fun saveCategory(categoryName: String) {
         viewModelScope.launch(IO) {
@@ -59,14 +63,11 @@ class MainActivityViewModel @Inject constructor(
     fun updateCategory(category: Category) {
         viewModelScope.launch(IO) {
             categoryRepository.updateCategory(category)
-            categoryRepository.setUpdated(category.cid,true)
+            categoryRepository.setUpdated(category.cid, true)
 
             getAllCategories()
         }
     }
-
-
-
 
 
     fun setCategoryDeleted(cid: Int) {
@@ -101,43 +102,43 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
-    fun setItemDeleted(item:Item){
+    fun setItemDeleted(item: Item) {
         viewModelScope.launch(IO) {
             itemRepository.setItemDeleted(item.itemId)
         }
-       // getAllItemsForCategory()
+        // getAllItemsForCategory()
     }
 
-    fun updateItem(item:Item){
+    fun updateItem(item: Item) {
         viewModelScope.launch(IO) {
             itemRepository.updateItem(item);
-            itemRepository.setItemUpdated(item.itemId,true)
+            itemRepository.setItemUpdated(item.itemId, true)
         }
     }
 
 
-    fun updateCountForItem(item: Item){
+    fun updateCountForItem(item: Item) {
         viewModelScope.launch(IO) {
-            itemRepository.updateItemCount(item.count,item.itemId)
-            itemRepository.setItemUpdated(item.itemId,true)
+            itemRepository.updateItemCount(item.count, item.itemId)
+            itemRepository.setItemUpdated(item.itemId, true)
         }
     }
 
 
-    fun getAllDocumentsForItem(){
+    fun getAllDocumentsForItem() {
         documentListLiveData.value?.clear()
         viewModelScope.launch(IO) {
-            val docList  = documentRepository.getAllDocumentsForItem(item?.itemId!!)
-            val list  =  mutableListOf<Document>()
+            val docList = documentRepository.getAllDocumentsForItem(item?.itemId!!)
+            val list = mutableListOf<Document>()
             list.addAll(docList)
-            withContext(Main){
+            withContext(Main) {
                 documentListLiveData.value = list
             }
         }
     }
 
 
-    private fun saveDocumentForItem(uri:Uri){
+    private fun saveDocumentForItem(uri: Uri) {
         viewModelScope.launch(IO) {
             if (item != null) {
                 val document = Document(
@@ -153,28 +154,86 @@ class MainActivityViewModel @Inject constructor(
     }
 
 
-    fun deleteDocument(document:Document){
+    fun deleteDocument(document: Document) {
         viewModelScope.launch(IO) {
-            documentRepository.markItemForDeletion(document.id,true);
+            documentRepository.markItemForDeletion(document.id, true);
             getAllDocumentsForItem()
         }
 
     }
 
 
-
     fun onAddCategoryClick() {
         categoryActionHandler.onAddCategoryPressed()
     }
 
-    fun onAddItemClicked(){
+    fun onAddItemClicked() {
         itemViewActionHandler.addItemClicked()
     }
 
     fun saveUriForItem(uris: ArrayList<Uri>) {
-       uris.forEach {
-           saveDocumentForItem(it)
-       }
+        uris.forEach {
+            saveDocumentForItem(it)
+        }
+    }
+
+    fun performInitialSyncIfRequired() {
+        viewModelScope.launch(IO) {
+            if (categoryRepository.getAllCategories().isEmpty()) {
+                //perform fetch and populate local db
+                //perform fetch for category and get server category ids for each category
+                //perform fetch for each category
+                //document fetch for adding image urls into the db
+                categoryRepository.fetchCategoriesOnline().categories.forEach { cat ->
+                    categoryRepository.storeCategory(
+                        Category(
+                            serverId = cat.serverId,
+                            categoryName = cat.categoryName,
+                            requiresAction = cat.requiresAction,
+                            hasSynced = true
+                        )
+                    );
+
+                    val savedCat = categoryRepository.getAllCategories()
+                        .first { category -> category.serverId == cat.serverId }
+
+                    itemRepository.fetchItemsForCategory(cat.serverId).catItems.forEach { item->
+                        val itemToSave  = Item(
+                            name = item.name,
+                            rate = item.rate,
+                            count = item.count,
+                            categoryHasSynced = true,
+                            catServerId = cat.serverId,
+                            localCategoryId =savedCat.cid,
+                            hasSynced = true,
+                            itemServedId = item.itemServedId,
+                        )
+
+                        itemRepository.addItem(itemToSave)
+
+                        val savedItem  = itemRepository.getAllItems()
+                            .first { i -> i.itemServedId == item.itemServedId }
+
+                        if(item.files.isNotEmpty()){
+                            item.files.forEach {
+                                val doc = Document(
+                                    localItemId = savedItem.itemId,
+                                    itemServedId = savedItem.itemServedId,
+                                    hasSynced = true,
+                                    serverUrl = it.serverUrl,
+                                    serverId = it.serverId,
+                                    filePath = ""
+                                )
+                                Log.e(TAG, "performInitialSyncIfRequired: Inserting doc into db....", )
+                                documentRepository.addDocument(doc)
+                            }
+                        }
+                    }
+
+                }
+                getAllCategories()
+            }
+        }
     }
 
 

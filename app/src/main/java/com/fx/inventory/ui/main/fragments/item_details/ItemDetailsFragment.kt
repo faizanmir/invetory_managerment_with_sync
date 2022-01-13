@@ -51,7 +51,6 @@ class ItemDetailsFragment:Fragment() {
         binding.documentRecyclerView.adapter =  documentAdapter
 
         viewModel.documentListLiveData.observe(viewLifecycleOwner,{
-            Log.e(TAG, "onViewCreated:Item details ${it}", )
             if(it.isNotEmpty()){
                 hideNoDocumentsTextView()
                 documentAdapter.updateData(it)

@@ -8,12 +8,12 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.work.*
 import com.fx.inventory.R
 import com.fx.inventory.sync.SyncWorker
-import com.fx.inventory.ui.main.fragments.category.CategoryFragment
 import com.fx.inventory.ui.main.fragments.camera.CameraFragment
-import com.fx.inventory.ui.main.fragments.item_details.ItemDetailsFragment
+import com.fx.inventory.ui.main.fragments.category.CategoryFragment
 import com.fx.inventory.ui.main.fragments.item.ItemFragment
-import com.fx.inventory.ui.main.viewModel.interfaces.FragmentListener
+import com.fx.inventory.ui.main.fragments.item_details.ItemDetailsFragment
 import com.fx.inventory.ui.main.viewModel.MainActivityViewModel
+import com.fx.inventory.ui.main.viewModel.interfaces.FragmentListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 
@@ -32,7 +32,11 @@ class MainActivity : AppCompatActivity(), FragmentListener {
         setContentView(R.layout.activity_main)
         changeFragment(CategoryFragment::class.java)
         startSyncService()
+        mainActivityViewModel.performInitialSyncIfRequired()
     }
+
+
+
 
 
     override fun changeFragment(clazz: Class<*>) {
@@ -110,7 +114,7 @@ class MainActivity : AppCompatActivity(), FragmentListener {
 
 
         workManager.enqueueUniquePeriodicWork(
-            "test",
+            "inventory-sync-worker",
             ExistingPeriodicWorkPolicy.REPLACE,
             testPeriodicWork
         )

@@ -1,6 +1,7 @@
 package com.fx.inventory.data.models
 
 import androidx.room.*
+import com.google.gson.annotations.SerializedName
 import kotlin.random.Random
 
 @Entity(
@@ -26,17 +27,21 @@ import kotlin.random.Random
     ],
 
 )
-data class Item(
+
+data class Item constructor(
     @PrimaryKey(autoGenerate = true) val itemId: Int = 0,
-    @ColumnInfo var name: String,
-    @ColumnInfo var rate: Double,
-    @ColumnInfo var count: Double,
-    @ColumnInfo val localCategoryId: Int,
-    @ColumnInfo val updated: Boolean = false,
-    @ColumnInfo val catServerId: Int,
-    @ColumnInfo val itemServedId: Int = Random(System.currentTimeMillis()).nextInt(),
-    @ColumnInfo val deleted: Boolean = false,
-    @ColumnInfo val catDeleted: Boolean = false,
-    @ColumnInfo val hasSynced:Boolean = false,
-    @ColumnInfo val categoryHasSynced:Boolean,
-)
+    @SerializedName("name")@ColumnInfo var name: String,
+    @SerializedName("rate")@ColumnInfo var rate: Double,
+    @SerializedName("count")@ColumnInfo var count: Double,
+    @ColumnInfo var localCategoryId: Int,
+    @ColumnInfo var updated: Boolean = false,
+    @ColumnInfo var catServerId: Int,
+    @SerializedName("id")@ColumnInfo val itemServedId: Int = Random(System.currentTimeMillis()).nextInt(),
+    @ColumnInfo var deleted: Boolean = false,
+    @ColumnInfo var catDeleted: Boolean = false,
+    @ColumnInfo var hasSynced:Boolean = false,
+    @ColumnInfo var categoryHasSynced:Boolean,
+){
+    @Ignore @SerializedName("files") var files:List<Document> = ArrayList()
+
+}

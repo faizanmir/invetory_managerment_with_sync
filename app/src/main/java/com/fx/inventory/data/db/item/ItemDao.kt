@@ -57,6 +57,8 @@ interface ItemDao :BaseDao{
     @Query("select * from item where itemId =(:itemId)")
     suspend fun getItem(itemId: Int):Item
 
+    @Query("DELETE  from item where localCategoryId=(:cid) ")
+    suspend fun deleteItemsWithCatId(cid: Int)
 
 
 }

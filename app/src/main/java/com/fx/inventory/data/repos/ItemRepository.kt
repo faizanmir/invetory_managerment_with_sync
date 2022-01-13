@@ -1,13 +1,18 @@
 package com.fx.inventory.data.repos
 
+import android.util.Log
 import com.fx.inventory.base.BaseRepository
 import com.fx.inventory.data.datamanager.DataManager
 import com.fx.inventory.data.db.AppDb
 import com.fx.inventory.data.db.item.ItemDao
+import com.fx.inventory.data.models.Document
 import com.fx.inventory.data.models.Item
+import com.fx.inventory.data.models.ItemWrapper
+import com.google.gson.JsonElement
+import retrofit2.Retrofit
 import javax.inject.Inject
 
-class ItemRepository @Inject constructor(dataManager: DataManager,db: AppDb):BaseRepository(dataManager, db) {
+class ItemRepository @Inject constructor(dataManager: DataManager,db: AppDb,rf: Retrofit):BaseRepository(dataManager, db,rf) {
     private val itemDao:ItemDao =  getDaoForClassType(ItemDao::class.java) as ItemDao
 
     suspend fun addItem(item:Item){
@@ -79,6 +84,52 @@ class ItemRepository @Inject constructor(dataManager: DataManager,db: AppDb):Bas
     }
 
 
+    suspend fun fetchItemsForCategory(catId: Int): ItemWrapper {
+        val response  =  fetchUserDataApi.getItemsForCategory(formHeaderMap(), catId).execute().body()!!
+        val itemList  =  ArrayList<Item>()
+        if(response.has("items")){
+            val jsonItemList = response.getAsJsonArray("items")
+            jsonItemList.forEach {
+                val name = it.asJsonObject.get("name")
+                val rate = it.asJsonObject.get("rate")
+                val count =  it.asJsonObject.get("count")
+                val files  =  it.asJsonObject.get("files")
+                val id= it.asJsonObject.get("id")
+                val item = Item(
+                    name= name.asString,
+                    rate = rate.asDouble,
+                    count = count.asDouble,
+                    localCategoryId = -1,
+                    itemServedId = id.asInt,
+                    hasSynced = true,
+                    categoryHasSynced = true,
+                    catServerId = -1,
+                )
+                item.files = getFileEntry(files)
+                itemList.add(item)
+            }
+        }
+        return ItemWrapper(itemList)
+    }
+
+
+    private fun getFileEntry(files:JsonElement): List<Document> {
+        val docs  =  arrayListOf<Document>()
+        files.asJsonArray.forEach {
+            val url = it.asJsonObject.get("url")
+            val id =  it.asJsonObject.get("id")
+            val doc  =  Document();
+            doc.serverUrl =  url.asString;
+            doc.id = id.asInt
+            docs.add(doc)
+        }
+        return docs
+    }
+
+
+    suspend fun deleteItemsWithCatId(cid:Int){
+        return itemDao.deleteItemsWithCatId(cid);
+    }
 
 
 }
